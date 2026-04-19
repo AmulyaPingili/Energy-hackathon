@@ -11,6 +11,10 @@ data/processed/*.parquet
 data/processed/features_filtered_v2.parquet
 data/processed/features_filtered_v3.parquet
 
+# Large intermediate output — v1 scores all 372K parcels before any filtering
+# The filtered/final results (robustness_v2.csv, robustness_v3.csv, top20_*.csv) are kept
+outputs/robustness.csv
+
 # Python
 __pycache__/
 *.py[cod]

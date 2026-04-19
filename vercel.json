@@ -1,0 +1,4 @@
+{
+  "outputDirectory": "frontend",
+  "buildCommand": "echo \"window.BTM_CONFIG = { MAPBOX_TOKEN: '$MAPBOX_TOKEN' };\" > frontend/config.js"
+}

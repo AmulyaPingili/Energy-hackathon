@@ -1,0 +1,28 @@
+# Claude Code session file — not for public repos
+CLAUDE.md
+
+# Raw geospatial data — large files, re-downloaded on first run
+data/raw/parcels/
+data/raw/water/
+data/raw/fiber/
+
+# Large binary processed files — regenerable by running the pipeline
+data/processed/*.parquet
+data/processed/features_filtered_v2.parquet
+data/processed/features_filtered_v3.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db

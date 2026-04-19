@@ -1,0 +1,9 @@
+season,is_peak,p10,p50,p90
+Fall,False,15.27,37.86,64.37
+Fall,True,25.68,48.29,72.86
+Spring,False,-4.63,23.92,48.85
+Spring,True,6.53,34.74,59.69
+Summer,False,-5.02,29.57,54.9
+Summer,True,6.28,40.09,65.49
+Winter,False,14.28,31.26,55.7
+Winter,True,25.07,42.27,66.71

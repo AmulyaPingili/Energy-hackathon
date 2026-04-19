@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_dd35c4413e172e23bf574c48f98235a0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_dd35c4413e172e23bf574c48f98235a0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_dd35c4413e172e23bf574c48f98235a0 = L.map(
+                "map_dd35c4413e172e23bf574c48f98235a0",
+                {
+                    center: [30.35403346084964, -97.84385968332535],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ab16b35df484aa4d6d551431d7e9d01b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ab16b35df484aa4d6d551431d7e9d01b.addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+            var circle_marker_fda31362c71549a03fa9f2c291841261 = L.circleMarker(
+                [30.34547859255447, -97.9871545452002],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_c59b58711194d882c16f0613fe1a7e14 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_572a834d1e77d21b8ec30f0620471f60 = $(`<div id="html_572a834d1e77d21b8ec30f0620471f60" style="width: 100.0%; height: 100.0%;">Parcel ID: 804168<br>Robust Rank: 1<br>Area (acres): 118.40<br>Water Dist (km): 0.016<br>Flowline Dist (km): 0.012<br>Top20 Probability: 0.934<br>Confidence: 0.660</div>`)[0];
+                popup_c59b58711194d882c16f0613fe1a7e14.setContent(html_572a834d1e77d21b8ec30f0620471f60);
+            
+        
+
+        circle_marker_fda31362c71549a03fa9f2c291841261.bindPopup(popup_c59b58711194d882c16f0613fe1a7e14)
+        ;
+
+        
+    
+    
+            var circle_marker_27884c6fd6a9a04dcf42c55962805bd8 = L.circleMarker(
+                [30.20945691038058, -97.93011215161692],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_3e50b801752bcaf0a00f8d195e6ad1d0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_071fb3929b243634c03f4e50119ece9a = $(`<div id="html_071fb3929b243634c03f4e50119ece9a" style="width: 100.0%; height: 100.0%;">Parcel ID: 324445<br>Robust Rank: 2<br>Area (acres): 83.52<br>Water Dist (km): 0.168<br>Flowline Dist (km): 0.002<br>Top20 Probability: 0.883<br>Confidence: 0.633</div>`)[0];
+                popup_3e50b801752bcaf0a00f8d195e6ad1d0.setContent(html_071fb3929b243634c03f4e50119ece9a);
+            
+        
+
+        circle_marker_27884c6fd6a9a04dcf42c55962805bd8.bindPopup(popup_3e50b801752bcaf0a00f8d195e6ad1d0)
+        ;
+
+        
+    
+    
+            var circle_marker_d4c6847ce744af49e1c987c1dd9b532b = L.circleMarker(
+                [30.24276296751073, -97.53353127538907],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_6461acdf5cca3fe210add6b4c7c02a15 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6a705187b3d9f503352dcad20701daa3 = $(`<div id="html_6a705187b3d9f503352dcad20701daa3" style="width: 100.0%; height: 100.0%;">Parcel ID: 190649<br>Robust Rank: 3<br>Area (acres): 117.75<br>Water Dist (km): 0.159<br>Flowline Dist (km): 0.031<br>Top20 Probability: 0.889<br>Confidence: 0.646</div>`)[0];
+                popup_6461acdf5cca3fe210add6b4c7c02a15.setContent(html_6a705187b3d9f503352dcad20701daa3);
+            
+        
+
+        circle_marker_d4c6847ce744af49e1c987c1dd9b532b.bindPopup(popup_6461acdf5cca3fe210add6b4c7c02a15)
+        ;
+
+        
+    
+    
+            var circle_marker_8b61564cd9b29f242358ae118c2b40eb = L.circleMarker(
+                [30.265174634969092, -97.55922089669613],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_4f73ba83f2ccdabc790a27d1ad340df0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5562400bfb4c99d3284a19cdd934373a = $(`<div id="html_5562400bfb4c99d3284a19cdd934373a" style="width: 100.0%; height: 100.0%;">Parcel ID: 838573<br>Robust Rank: 4<br>Area (acres): 66.03<br>Water Dist (km): 0.172<br>Flowline Dist (km): 0.011<br>Top20 Probability: 0.833<br>Confidence: 0.603</div>`)[0];
+                popup_4f73ba83f2ccdabc790a27d1ad340df0.setContent(html_5562400bfb4c99d3284a19cdd934373a);
+            
+        
+
+        circle_marker_8b61564cd9b29f242358ae118c2b40eb.bindPopup(popup_4f73ba83f2ccdabc790a27d1ad340df0)
+        ;
+
+        
+    
+    
+            var circle_marker_d25db2cdc0dbcd51061890af897b1771 = L.circleMarker(
+                [30.310360681460516, -97.52550529908017],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_5ddcc2331584051c4b0289f9f56dd21c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_52604e9efa353e48ac9f95dd86afd19a = $(`<div id="html_52604e9efa353e48ac9f95dd86afd19a" style="width: 100.0%; height: 100.0%;">Parcel ID: 214268<br>Robust Rank: 5<br>Area (acres): 75.15<br>Water Dist (km): 0.037<br>Flowline Dist (km): 0.054<br>Top20 Probability: 0.809<br>Confidence: 0.587</div>`)[0];
+                popup_5ddcc2331584051c4b0289f9f56dd21c.setContent(html_52604e9efa353e48ac9f95dd86afd19a);
+            
+        
+
+        circle_marker_d25db2cdc0dbcd51061890af897b1771.bindPopup(popup_5ddcc2331584051c4b0289f9f56dd21c)
+        ;
+
+        
+    
+    
+            var circle_marker_c6883841c13802aaf3537e1189f5b592 = L.circleMarker(
+                [30.121840149504813, -97.70425863564812],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_79f74aa5833b9591dde67545899766eb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f26592aa7a5140cdfcef8da923bb1430 = $(`<div id="html_f26592aa7a5140cdfcef8da923bb1430" style="width: 100.0%; height: 100.0%;">Parcel ID: 883689<br>Robust Rank: 6<br>Area (acres): 55.18<br>Water Dist (km): 0.191<br>Flowline Dist (km): 0.003<br>Top20 Probability: 0.795<br>Confidence: 0.578</div>`)[0];
+                popup_79f74aa5833b9591dde67545899766eb.setContent(html_f26592aa7a5140cdfcef8da923bb1430);
+            
+        
+
+        circle_marker_c6883841c13802aaf3537e1189f5b592.bindPopup(popup_79f74aa5833b9591dde67545899766eb)
+        ;
+
+        
+    
+    
+            var circle_marker_b9859ad076c1cfebb0574d9428d46a70 = L.circleMarker(
+                [30.37664770637482, -97.86320224968665],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_9798c3985e8c228ccd46a6ba71e68457 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c3c5488a2e624b7f127350ad617b627e = $(`<div id="html_c3c5488a2e624b7f127350ad617b627e" style="width: 100.0%; height: 100.0%;">Parcel ID: 522658<br>Robust Rank: 7<br>Area (acres): 155.16<br>Water Dist (km): 0.012<br>Flowline Dist (km): 0.103<br>Top20 Probability: 0.771<br>Confidence: 0.580</div>`)[0];
+                popup_9798c3985e8c228ccd46a6ba71e68457.setContent(html_c3c5488a2e624b7f127350ad617b627e);
+            
+        
+
+        circle_marker_b9859ad076c1cfebb0574d9428d46a70.bindPopup(popup_9798c3985e8c228ccd46a6ba71e68457)
+        ;
+
+        
+    
+    
+            var circle_marker_7c0571dd890741b76808e0895e0534ae = L.circleMarker(
+                [30.172597188253846, -97.7636651475909],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_9451df94f58e1cd9d3e281f9c0a3c92d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5e03ced244229b070c5ed7df2d8bd3de = $(`<div id="html_5e03ced244229b070c5ed7df2d8bd3de" style="width: 100.0%; height: 100.0%;">Parcel ID: 513121<br>Robust Rank: 8<br>Area (acres): 90.12<br>Water Dist (km): 0.169<br>Flowline Dist (km): 0.043<br>Top20 Probability: 0.754<br>Confidence: 0.564</div>`)[0];
+                popup_9451df94f58e1cd9d3e281f9c0a3c92d.setContent(html_5e03ced244229b070c5ed7df2d8bd3de);
+            
+        
+
+        circle_marker_7c0571dd890741b76808e0895e0534ae.bindPopup(popup_9451df94f58e1cd9d3e281f9c0a3c92d)
+        ;
+
+        
+    
+    
+            var circle_marker_d5f56cbc1d75c2b91eaa3eb9ad4a09ba = L.circleMarker(
+                [30.129135644769576, -97.5887823515389],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_4e6b5efd2d4a3e0c8b7bac2f3861b285 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6411454a89faf9e135135655aa50c324 = $(`<div id="html_6411454a89faf9e135135655aa50c324" style="width: 100.0%; height: 100.0%;">Parcel ID: 464416<br>Robust Rank: 9<br>Area (acres): 72.88<br>Water Dist (km): 0.223<br>Flowline Dist (km): 0.015<br>Top20 Probability: 0.714<br>Confidence: 0.536</div>`)[0];
+                popup_4e6b5efd2d4a3e0c8b7bac2f3861b285.setContent(html_6411454a89faf9e135135655aa50c324);
+            
+        
+
+        circle_marker_d5f56cbc1d75c2b91eaa3eb9ad4a09ba.bindPopup(popup_4e6b5efd2d4a3e0c8b7bac2f3861b285)
+        ;
+
+        
+    
+    
+            var circle_marker_c64c44eb90214cf65f82cbd7ce1dda8c = L.circleMarker(
+                [30.28765915262321, -97.48561398607512],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_d7ef00ecedb488c251909eaefbe899d8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6827b370f6e33b5e1e935c185954ac80 = $(`<div id="html_6827b370f6e33b5e1e935c185954ac80" style="width: 100.0%; height: 100.0%;">Parcel ID: 201906<br>Robust Rank: 10<br>Area (acres): 67.14<br>Water Dist (km): 0.151<br>Flowline Dist (km): 0.047<br>Top20 Probability: 0.670<br>Confidence: 0.509</div>`)[0];
+                popup_d7ef00ecedb488c251909eaefbe899d8.setContent(html_6827b370f6e33b5e1e935c185954ac80);
+            
+        
+
+        circle_marker_c64c44eb90214cf65f82cbd7ce1dda8c.bindPopup(popup_d7ef00ecedb488c251909eaefbe899d8)
+        ;
+
+        
+    
+    
+            var circle_marker_9c9ababd39c2b67ec89e8d7892d19d61 = L.circleMarker(
+                [30.228441058919184, -97.66106572037596],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_62f9dd90908da48aee750065afb7888a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6dacb8dfffe66f6a76e5743eedc23d36 = $(`<div id="html_6dacb8dfffe66f6a76e5743eedc23d36" style="width: 100.0%; height: 100.0%;">Parcel ID: 855742<br>Robust Rank: 11<br>Area (acres): 56.56<br>Water Dist (km): 0.179<br>Flowline Dist (km): 0.036<br>Top20 Probability: 0.645<br>Confidence: 0.493</div>`)[0];
+                popup_62f9dd90908da48aee750065afb7888a.setContent(html_6dacb8dfffe66f6a76e5743eedc23d36);
+            
+        
+
+        circle_marker_9c9ababd39c2b67ec89e8d7892d19d61.bindPopup(popup_62f9dd90908da48aee750065afb7888a)
+        ;
+
+        
+    
+    
+            var circle_marker_71c53b1de6789f61fdab629929d4df67 = L.circleMarker(
+                [30.400973746640986, -97.55819694008608],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_89dfbdb018d9ddc631c04e18eead1085 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fb2a80977f2f377aa9163f22a790b5a8 = $(`<div id="html_fb2a80977f2f377aa9163f22a790b5a8" style="width: 100.0%; height: 100.0%;">Parcel ID: 548458<br>Robust Rank: 12<br>Area (acres): 128.01<br>Water Dist (km): 0.348<br>Flowline Dist (km): 0.008<br>Top20 Probability: 0.536<br>Confidence: 0.443</div>`)[0];
+                popup_89dfbdb018d9ddc631c04e18eead1085.setContent(html_fb2a80977f2f377aa9163f22a790b5a8);
+            
+        
+
+        circle_marker_71c53b1de6789f61fdab629929d4df67.bindPopup(popup_89dfbdb018d9ddc631c04e18eead1085)
+        ;
+
+        
+    
+    
+            var circle_marker_de90f64be453334244b10f1b4d32df0d = L.circleMarker(
+                [30.21042214086604, -97.92239698015871],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_e7837bcc465bc72ee05f73c39a525cae = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_06d377157138bbbb1aa04c23f5fa2e26 = $(`<div id="html_06d377157138bbbb1aa04c23f5fa2e26" style="width: 100.0%; height: 100.0%;">Parcel ID: 857666<br>Robust Rank: 13<br>Area (acres): 71.44<br>Water Dist (km): 0.292<br>Flowline Dist (km): 0.011<br>Top20 Probability: 0.506<br>Confidence: 0.415</div>`)[0];
+                popup_e7837bcc465bc72ee05f73c39a525cae.setContent(html_06d377157138bbbb1aa04c23f5fa2e26);
+            
+        
+
+        circle_marker_de90f64be453334244b10f1b4d32df0d.bindPopup(popup_e7837bcc465bc72ee05f73c39a525cae)
+        ;
+
+        
+    
+    
+            var circle_marker_ebb2ceba0733cdb661905a1297c981f8 = L.circleMarker(
+                [30.44176577026729, -97.73505492191728],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_db4c94f0e819287657fe1b12cc0eac8f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c470fe7d8246df04c382f57bc359aa31 = $(`<div id="html_c470fe7d8246df04c382f57bc359aa31" style="width: 100.0%; height: 100.0%;">Parcel ID: 820454<br>Robust Rank: 14<br>Area (acres): 91.65<br>Water Dist (km): 0.230<br>Flowline Dist (km): 0.056<br>Top20 Probability: 0.453<br>Confidence: 0.389</div>`)[0];
+                popup_db4c94f0e819287657fe1b12cc0eac8f.setContent(html_c470fe7d8246df04c382f57bc359aa31);
+            
+        
+
+        circle_marker_ebb2ceba0733cdb661905a1297c981f8.bindPopup(popup_db4c94f0e819287657fe1b12cc0eac8f)
+        ;
+
+        
+    
+    
+            var circle_marker_02e0b8361d91cbe634705e9203cab7bf = L.circleMarker(
+                [30.41713806862657, -97.55083330701763],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_b8ea406a19bec811727f1a7328967f0f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3db7bf6ab068b38bfd3e724bc5d45235 = $(`<div id="html_3db7bf6ab068b38bfd3e724bc5d45235" style="width: 100.0%; height: 100.0%;">Parcel ID: 868345<br>Robust Rank: 15<br>Area (acres): 53.92<br>Water Dist (km): 0.292<br>Flowline Dist (km): 0.007<br>Top20 Probability: 0.453<br>Confidence: 0.380</div>`)[0];
+                popup_b8ea406a19bec811727f1a7328967f0f.setContent(html_3db7bf6ab068b38bfd3e724bc5d45235);
+            
+        
+
+        circle_marker_02e0b8361d91cbe634705e9203cab7bf.bindPopup(popup_b8ea406a19bec811727f1a7328967f0f)
+        ;
+
+        
+    
+    
+            var circle_marker_25358862619b01c1d8ed85a72533d98f = L.circleMarker(
+                [30.092861102042214, -97.71632172935855],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_e922e679b4b8f7d06f93b991e151351d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_df7a208af83428c6443bc0514a7e1aee = $(`<div id="html_df7a208af83428c6443bc0514a7e1aee" style="width: 100.0%; height: 100.0%;">Parcel ID: 301097<br>Robust Rank: 16<br>Area (acres): 63.01<br>Water Dist (km): 0.244<br>Flowline Dist (km): 0.048<br>Top20 Probability: 0.336<br>Confidence: 0.315</div>`)[0];
+                popup_e922e679b4b8f7d06f93b991e151351d.setContent(html_df7a208af83428c6443bc0514a7e1aee);
+            
+        
+
+        circle_marker_25358862619b01c1d8ed85a72533d98f.bindPopup(popup_e922e679b4b8f7d06f93b991e151351d)
+        ;
+
+        
+    
+    
+            var circle_marker_3c59dc01101d9a4cb1eeab4ff9c6c779 = L.circleMarker(
+                [30.094407443977936, -97.64490220308554],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_10f4af75033bbb27252acec272188c7c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ecbdf4e965ed3f052f0f180c8f67f250 = $(`<div id="html_ecbdf4e965ed3f052f0f180c8f67f250" style="width: 100.0%; height: 100.0%;">Parcel ID: 300913<br>Robust Rank: 17<br>Area (acres): 50.03<br>Water Dist (km): 0.296<br>Flowline Dist (km): 0.020<br>Top20 Probability: 0.321<br>Confidence: 0.302</div>`)[0];
+                popup_10f4af75033bbb27252acec272188c7c.setContent(html_ecbdf4e965ed3f052f0f180c8f67f250);
+            
+        
+
+        circle_marker_3c59dc01101d9a4cb1eeab4ff9c6c779.bindPopup(popup_10f4af75033bbb27252acec272188c7c)
+        ;
+
+        
+    
+    
+            var circle_marker_0fe7029fda01f3d575093c2cf8660111 = L.circleMarker(
+                [30.183063345544294, -97.62642434485552],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_ff8de0a32e688065995f5b93b3d5f2e9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8679165a8ba483d969c48bfe01416238 = $(`<div id="html_8679165a8ba483d969c48bfe01416238" style="width: 100.0%; height: 100.0%;">Parcel ID: 783861<br>Robust Rank: 18<br>Area (acres): 81.84<br>Water Dist (km): 0.304<br>Flowline Dist (km): 0.041<br>Top20 Probability: 0.006<br>Confidence: 0.122</div>`)[0];
+                popup_ff8de0a32e688065995f5b93b3d5f2e9.setContent(html_8679165a8ba483d969c48bfe01416238);
+            
+        
+
+        circle_marker_0fe7029fda01f3d575093c2cf8660111.bindPopup(popup_ff8de0a32e688065995f5b93b3d5f2e9)
+        ;
+
+        
+    
+    
+            var circle_marker_0ce2fa08130ea3934c584d213f4548fb = L.circleMarker(
+                [30.53687407410011, -98.05291915344607],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_25a997bbf1c785ba752b6008ee1314ed = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0a2e5e66ae04330674dac8ef66d63f33 = $(`<div id="html_0a2e5e66ae04330674dac8ef66d63f33" style="width: 100.0%; height: 100.0%;">Parcel ID: 352920<br>Robust Rank: 19<br>Area (acres): 57.91<br>Water Dist (km): 0.329<br>Flowline Dist (km): 0.020<br>Top20 Probability: 0.160<br>Confidence: 0.209</div>`)[0];
+                popup_25a997bbf1c785ba752b6008ee1314ed.setContent(html_0a2e5e66ae04330674dac8ef66d63f33);
+            
+        
+
+        circle_marker_0ce2fa08130ea3934c584d213f4548fb.bindPopup(popup_25a997bbf1c785ba752b6008ee1314ed)
+        ;
+
+        
+    
+    
+            var circle_marker_03a577f5f098ebeee989be7103395a78 = L.circleMarker(
+                [30.439465659178214, -97.46641043349514],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_dd35c4413e172e23bf574c48f98235a0);
+        
+    
+        var popup_1963fb41ac71e5abe103374ee3773ee1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_58ffb050a273494ff0020de24af7fa78 = $(`<div id="html_58ffb050a273494ff0020de24af7fa78" style="width: 100.0%; height: 100.0%;">Parcel ID: 271876<br>Robust Rank: 20<br>Area (acres): 75.59<br>Water Dist (km): 0.352<br>Flowline Dist (km): 0.022<br>Top20 Probability: 0.063<br>Confidence: 0.155</div>`)[0];
+                popup_1963fb41ac71e5abe103374ee3773ee1.setContent(html_58ffb050a273494ff0020de24af7fa78);
+            
+        
+
+        circle_marker_03a577f5f098ebeee989be7103395a78.bindPopup(popup_1963fb41ac71e5abe103374ee3773ee1)
+        ;
+
+        
+    
+</script>
+</html>

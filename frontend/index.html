@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTM Site Scout — Travis County, TX</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* ── THEME: Green (active) ── */
+      --bg:           #0d1117;
+      --bg-card:      #161b22;
+      --bg-card2:     #1c2128;
+      --accent:       #3fb950;
+      --accent-soft:  #2ea043;
+      --accent-sage:  #56d364;
+      --accent-dim:   rgba(63,185,80,0.10);
+      --accent-border:rgba(63,185,80,0.28);
+      --text:         #e6edf3;
+      --text-mid:     #b1bac4;
+      --muted:        #6e7681;
+      --border:       rgba(230,237,243,0.10);
+      --yellow:       #e3b341;
+      --yellow-dim:   rgba(227,179,65,0.10);
+      --red:          #f85149;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+
+      /* ── THEME: Purple (uncomment to swap)
+      --bg:#05050d; --bg-card:#0c0c1a; --bg-card2:#111124;
+      --accent:#a855f7; --accent-soft:#9333ea; --accent-sage:#c084fc;
+      --accent-dim:rgba(168,85,247,0.10); --accent-border:rgba(168,85,247,0.30);
+      --text:#e8e0f8; --text-mid:#b0a8c8; --muted:#6b6080; --border:rgba(168,85,247,0.14);
+      ── */
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-mono);background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
+    button{cursor:pointer;font-family:var(--font-mono)}
+
+    /* ── Map ── */
+    #map{position:fixed;inset:0;z-index:0;transition:top .5s ease,right .5s ease}
+    #map.split{top:56px;right:42vw}
+
+    /* ── Intro ── */
+    #intro-screen{position:fixed;inset:0;z-index:100;display:grid;grid-template-columns:420px 1fr;transition:opacity .9s cubic-bezier(.22,1,.36,1),visibility .9s ease}
+    #intro-screen.exiting{opacity:0;visibility:hidden;pointer-events:none}
+    .intro-panel{background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between;padding:40px 44px 44px;position:relative;overflow:hidden}
+    .intro-panel::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(63,185,80,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(63,185,80,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+    .intro-globe-side{position:relative;background:linear-gradient(to right,rgba(13,17,23,0.7) 0%,rgba(13,17,23,0.2) 35%,transparent 65%);pointer-events:auto}
+    .corner-tick{position:absolute;width:56px;height:56px}
+    .corner-tick.tr{top:40px;right:40px;border-top:1px solid var(--accent-border);border-right:1px solid var(--accent-border)}
+    .corner-tick.br{bottom:40px;right:40px;border-bottom:1px solid var(--accent-border);border-right:1px solid var(--accent-border)}
+    .intro-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    .intro-logo{font-family:var(--font-display);font-size:1.2rem;letter-spacing:.14em;color:var(--accent)}
+    .intro-top-tag{font-size:.52rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+    .intro-headline-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 0 24px;position:relative;z-index:1}
+    .intro-eyebrow{font-size:.5rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+    .intro-eyebrow::before{content:'';width:22px;height:1px;background:var(--accent);flex-shrink:0}
+    .intro-headline{font-family:var(--font-display);font-size:clamp(3.8rem,7vw,5.5rem);line-height:.88;letter-spacing:.02em;color:var(--text);text-transform:uppercase;margin-bottom:28px}
+    .intro-headline .hl{color:var(--accent)}
+    .intro-desc{font-size:.68rem;color:var(--muted);line-height:1.9;max-width:300px;letter-spacing:.02em}
+    .intro-bottom{display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
+    #launch-btn{width:100%;padding:18px 22px;background:var(--accent);color:var(--bg);font-family:var(--font-display);font-size:1.15rem;letter-spacing:.08em;border:none;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,0 100%);transition:background .2s,transform .2s;text-align:left}
+    #launch-btn:hover{background:var(--accent-soft);transform:translateX(5px)}
+    .legend-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    .legend-chip{display:flex;align-items:center;gap:6px;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:var(--bg-card);border:1px solid var(--border);padding:5px 10px}
+    .chip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .chip-dot.green{background:#3fb950}.chip-dot.yellow{background:#e3b341}.chip-dot.red{background:#f85149}
+    .scan-line{flex:1;height:1px;background:var(--border);position:relative;overflow:hidden}
+    .scan-line::after{content:'';position:absolute;top:0;left:-60%;width:55%;height:100%;background:linear-gradient(to right,transparent,var(--accent-soft),transparent);animation:scan 2.4s ease-in-out infinite}
+    @keyframes scan{0%{left:-60%}100%{left:110%}}
+
+    /* ── Topbar ── */
+    #topbar{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(13,17,23,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:40;opacity:0;pointer-events:none;transition:opacity .5s ease}
+    #topbar.visible{opacity:1;pointer-events:auto}
+    .nav-logo{font-family:var(--font-display);font-size:1.35rem;letter-spacing:.14em;color:var(--accent)}
+    .nav-stats{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent-border);padding:7px 18px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+    #home-btn:hover{border-color:var(--accent)!important;color:var(--accent)!important}
+    .nav-legend{display:flex;align-items:center;gap:14px;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .nav-legend-item{display:flex;align-items:center;gap:5px}
+    .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .nav-dot.green{background:#3fb950}.nav-dot.yellow{background:#e3b341}.nav-dot.red{background:#f85149}
+
+    /* ── Markers ── */
+    .parcel-marker{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);cursor:pointer;transition:transform .15s,box-shadow .15s}
+    .parcel-marker:hover{transform:scale(1.4)}
+    .parcel-marker.selected{transform:scale(1.6);box-shadow:0 0 10px rgba(255,255,255,.5)}
+    .parcel-marker.green{background:#3fb950;box-shadow:0 0 6px rgba(63,185,80,.5)}
+    .parcel-marker.yellow{background:#e3b341;box-shadow:0 0 6px rgba(227,179,65,.5)}
+    .parcel-marker.red{background:#f85149;box-shadow:0 0 6px rgba(248,81,73,.5)}
+
+    /* ── Right panel ── */
+    #right-panel{position:fixed;top:56px;right:0;width:42vw;bottom:0;display:none;flex-direction:column;background:var(--bg);border-left:1px solid var(--border);z-index:30}
+    #right-panel.visible{display:flex}
+    #panel-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:rgba(13,17,23,.8)}
+    .p-tab{flex:1;padding:10px 4px;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);background:transparent;border:none;border-bottom:2px solid transparent;transition:all .2s;cursor:pointer;font-family:var(--font-mono)}
+    .p-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .p-tab:hover{color:var(--text-mid)}
+
+    /* ── Tab views ── */
+    .tab-view{flex:1;overflow-y:auto;display:none;flex-direction:column}
+    .tab-view.active{display:flex}
+    .tab-view::-webkit-scrollbar{width:3px}
+    .tab-view::-webkit-scrollbar-track{background:transparent}
+    .tab-view::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+    /* ── Sites view ── */
+    #sites-view{padding:10px;gap:3px}
+    .method-blurb{font-size:.56rem;color:var(--muted);line-height:1.7;padding:8px 10px;background:var(--accent-dim);border:1px solid var(--accent-border);margin-bottom:8px}
+    .site-row{display:flex;align-items:flex-start;gap:8px;padding:8px;cursor:pointer;border:1px solid transparent;transition:all .18s;border-radius:4px}
+    .site-row:hover{background:var(--accent-dim);border-color:var(--accent-border)}
+    .site-row.selected{background:var(--accent-dim);border-color:var(--accent)}
+    .site-rank{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px}
+    .site-info{flex:1;min-width:0}
+    .site-id{font-size:11px;font-weight:600;color:var(--text)}
+    .site-sub{font-size:9px;color:var(--muted);margin-top:1px}
+    .mc-bar-wrap{margin-top:5px}
+    .mc-bar-label{font-size:8px;color:var(--muted);margin-bottom:2px}
+    .mc-bar-track{height:3px;background:rgba(255,255,255,.05);border-radius:2px}
+    .mc-bar-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+    .conf-badge{font-size:10px;font-weight:700}
+
+    /* ── Detail view ── */
+    #detail-view{padding:10px;gap:10px;animation:slideIn .3s ease both}
+    @keyframes slideIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+    .dl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .dl::after{content:'';flex:1;height:1px;background:var(--border)}
+    .dc{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:10px 12px}
+    .dc.sel{border-color:var(--accent);box-shadow:0 0 12px var(--accent-dim)}
+    .dr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .dr:last-child{border-bottom:none}
+    .drl{color:var(--muted)}
+    .drv{font-weight:600;color:var(--text);text-align:right;max-width:55%}
+    .sel-badge{display:inline-block;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);font-size:8px;font-weight:800;letter-spacing:1.5px;padding:1px 7px;border-radius:3px;margin-left:6px;vertical-align:middle;animation:bp 2s ease-in-out infinite}
+    @keyframes bp{0%,100%{box-shadow:0 0 4px var(--accent-dim)}50%{box-shadow:0 0 12px var(--accent-border)}}
+    .geo-name{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px}
+    .geo-sub{font-size:9px;color:var(--muted)}
+    .coords{font-size:9px;color:var(--muted);font-family:monospace;margin-top:3px}
+    .scorecard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:2px}
+    .sc-col{border-radius:4px;padding:8px 10px;font-size:9px}
+    .sc-col.land{background:var(--accent-dim);border:1px solid var(--accent-border)}
+    .sc-col.power{background:rgba(0,153,255,.06);border:1px solid rgba(0,153,255,.22)}
+    .sc-col.gas{background:rgba(60,60,80,.07);border:1px solid rgba(80,80,100,.18);opacity:.6}
+    .sc-title{font-weight:700;margin-bottom:6px;font-size:10px;color:var(--text)}
+    .sc-r{display:flex;justify-content:space-between;margin-bottom:3px}
+    .sc-l{color:var(--muted)}
+    .sc-v{font-weight:600;color:var(--text)}
+    .sc-note{font-size:8px;color:var(--muted);line-height:1.5;margin-top:4px}
+
+    /* ── Chart views ── */
+    #suba-view,#subc-view{padding:10px;gap:12px}
+    .chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px}
+    .chart-card h3{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+    .chart-card .hl{font-size:12px;color:var(--text);margin-bottom:8px;font-weight:600;font-family:var(--font-display);letter-spacing:.05em}
+    .chart-wrap{position:relative}
+    .insight{background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:4px;padding:7px 10px;margin-top:8px;font-size:10px;line-height:1.5;color:var(--text-mid)}
+    .insight b{color:var(--text)}
+    .legend-row{display:flex;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+    .legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--muted)}
+    .ldot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:2px}
+    .funnel-wrap{display:flex;flex-direction:column;gap:3px;padding:4px 0}
+    .funnel-step{display:flex;flex-direction:column;gap:1px}
+    .funnel-bar-row{display:flex;align-items:center;gap:8px}
+    .funnel-bar{height:22px;border-radius:3px;display:flex;align-items:center;padding:0 8px;min-width:36px}
+    .funnel-count{font-size:10px;font-weight:800;color:#fff;white-space:nowrap}
+    .funnel-label{font-size:9px;color:var(--text-mid);white-space:nowrap;flex-shrink:0}
+    .funnel-arrow{font-size:9px;color:var(--muted);padding-left:8px}
+    .funnel-filter{font-size:8px;color:var(--muted);padding:0 0 1px 8px;font-style:italic}
+    .uri-stat{font-size:22px;font-weight:800;color:var(--yellow);letter-spacing:-.5px;margin-bottom:2px;font-family:var(--font-display)}
+    .uri-stat-sub{font-size:10px;color:var(--muted);margin-bottom:10px}
+
+    /* ── Loading ── */
+    #loading-overlay{position:fixed;inset:0;z-index:200;background:rgba(13,17,23,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+    #loading-overlay.active{display:flex}
+    .loading-ring{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-label{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+
+    /* ── Toast ── */
+    #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg-card);border:1px solid var(--accent-border);color:var(--accent);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 20px;border-radius:4px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:300;white-space:nowrap}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- INTRO -->
+<div id="intro-screen">
+  <div class="intro-panel">
+    <div class="intro-top">
+      <span class="intro-logo">BTM Site Scout</span>
+      <span class="intro-top-tag">Travis County, TX</span>
+    </div>
+    <div class="intro-headline-wrap">
+      <div class="intro-eyebrow">Geospatial Scoring Engine for BTM Data Center Land Viability — Travis County, TX</div>
+      <h1 class="intro-headline"><span class="hl">BTM</span><br>Site<br>Scout</h1>
+      <p class="intro-desc">
+        From 186,000 raw parcels to 20 high-confidence sites — using Monte Carlo robustness testing,
+        USGS water infrastructure data, and ERCOT power economics to identify where a
+        behind-the-meter natural gas data center can actually be built.
+      </p>
+    </div>
+    <div class="intro-bottom">
+      <button id="launch-btn">→ Load Parcel Map</button>
+      <div class="legend-chips">
+        <div class="legend-chip"><div class="chip-dot green"></div>Conf &gt; 0.73</div>
+        <div class="legend-chip"><div class="chip-dot yellow"></div>Conf &gt; 0.70</div>
+        <div class="legend-chip"><div class="chip-dot red"></div>Conf &lt; 0.70</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
+        <span style="font-size:.5rem;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Scanning parcels</span>
+        <div class="scan-line"></div>
+      </div>
+    </div>
+  </div>
+  <div class="intro-globe-side">
+    <div class="corner-tick tr"></div>
+    <div class="corner-tick br"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div style="display:flex;align-items:center;gap:14px">
+    <button id="home-btn" style="padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:var(--font-mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);transition:border-color .2s,color .2s">← Home</button>
+    <span class="nav-logo">BTM Site Scout</span>
+  </div>
+  <div class="nav-legend">
+    <div class="nav-legend-item"><div class="nav-dot green"></div>&gt; 0.73</div>
+    <div class="nav-legend-item"><div class="nav-dot yellow"></div>&gt; 0.70</div>
+    <div class="nav-legend-item"><div class="nav-dot red"></div>&lt; 0.70</div>
+  </div>
+  <div style="display:flex;align-items:center">
+    <div class="nav-stats" id="parcel-count-badge">20 Sites Loaded</div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="right-panel">
+  <div id="panel-tabs">
+    <button class="p-tab active" id="tab-sites" onclick="showTab('sites')">Sites</button>
+    <button class="p-tab" id="tab-detail" onclick="showTab('detail')" style="display:none">Detail</button>
+    <button class="p-tab" id="tab-suba" onclick="showTab('suba')">Sub-A</button>
+    <button class="p-tab" id="tab-subc" onclick="showTab('subc')">Sub-C</button>
+  </div>
+
+  <!-- SITES -->
+  <div id="sites-view" class="tab-view active">
+    <div class="method-blurb">
+      186,000 Travis County parcels filtered to 630 qualified sites across 4 dimensions, then ranked via 1,000 Monte Carlo simulations with Dirichlet weight sampling. Click any site to zoom in.
+    </div>
+    <div id="site-list"></div>
+  </div>
+
+  <!-- DETAIL -->
+  <div id="detail-view" class="tab-view">
+    <div id="detail-content"></div>
+  </div>
+
+  <!-- SUB-A -->
+  <div id="suba-view" class="tab-view">
+    <div class="chart-card">
+      <h3>Sub-problem A — Filtering Pipeline</h3>
+      <div class="hl">186,000 parcels → 630 qualified → Top 20</div>
+      <div class="funnel-wrap" id="funnel-wrap"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Sub-problem A — Site Scoring</h3>
+      <div class="hl">Top 5 Sites: Multi-Dimension Radar</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="radarChart"></canvas></div>
+      <div class="insight"><b>Methodology:</b> 1,000 Monte Carlo simulations · Dirichlet weight sampling. Top site (804168) scores <b>p=0.993</b> — robust under any reasonable weighting.</div>
+    </div>
+    <div style="font-size:8px;color:var(--muted);text-align:center;padding:8px;line-height:1.6">Data: Travis County ArcGIS · USGS NHD · Monte Carlo n=1,000</div>
+  </div>
+
+  <!-- SUB-C -->
+  <div id="subc-view" class="tab-view">
+    <div class="chart-card">
+      <h3>Sub-problem C — Extreme Event</h3>
+      <div class="uri-stat">$9.1M in 8 days</div>
+      <div class="uri-stat-sub">10 MW BTM generator · Winter Storm Uri · Feb 10–18, 2021</div>
+      <div class="hl">LMP Spike vs. Gas Cost — Feb 2021</div>
+      <div class="chart-wrap" style="height:140px"><canvas id="uriChart"></canvas></div>
+      <div class="insight"><b>Peak Day 5:</b> ERCOT HB_SOUTH hit $9,000/MWh. Gas cost ~$12/MWh. Net spread: <b>~$8,988/MWh</b>. BTM is an <b>options strategy</b>, not an average-price business.</div>
+    </div>
+    <div class="chart-card">
+      <h3>Sub-problem C — Power Economics (2021–2024)</h3>
+      <div class="hl">BTM Spread: ERCOT HB_SOUTH vs. Henry Hub</div>
+      <div class="legend-row">
+        <div class="legend-item"><span class="ldot" style="background:#3fb950"></span>Mean spread</div>
+        <div class="legend-item"><span class="ldot" style="background:rgba(248,81,73,.6)"></span>Monthly peak</div>
+        <div class="legend-item"><span class="ldot" style="background:#56d364"></span>SARIMA forecast</div>
+        <div class="legend-item"><span class="ldot" style="background:rgba(86,211,100,.3)"></span>80% CI band</div>
+      </div>
+      <div class="chart-wrap" style="height:155px"><canvas id="spreadChart"></canvas></div>
+      <div class="insight"><b>Key insight:</b> $37.85/MWh mean spread · 94.9% viable hours. SARIMA MAPE on 180-day holdout: <b>16.3%</b>.</div>
+    </div>
+    <div class="chart-card">
+      <h3>Seasonal Spread Table — p50 $/MWh</h3>
+      <div class="hl">BTM spread by season and window</div>
+      <div id="season-table" style="margin-top:6px"></div>
+      <div class="insight" style="margin-top:8px"><b>Summer Peak</b> ~$40/MWh. <b>Spring Off-Peak</b> ~$24/MWh. Uri alone justifies site investment for many developers.</div>
+    </div>
+    <div style="font-size:8px;color:var(--muted);text-align:center;padding:8px;line-height:1.6">Data: ERCOT HB_SOUTH LMP · EIA Henry Hub · SARIMA(1,1,1)(1,1,1)[12]</div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-overlay">
+  <div class="loading-ring"></div>
+  <div class="loading-label" id="loading-label">Loading…</div>
+</div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+// Travis County study area bounding box (west, south, east, north)
+const TRAVIS_BBOX = [-98.25, 30.00, -97.30, 30.75];
+const TOKEN = (window.BTM_CONFIG || {}).MAPBOX_TOKEN || '';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SUB-A DATA
+// Top 20 sites from Monte Carlo pipeline (outputs/top20_robust_v3.csv)
+// confidence = composite score (p_top20 + stability + flood safety)
+// p_top20    = fraction of 1,000 Dirichlet simulations where site ranked top 20
+// water_dist / flow_dist = km to nearest USGS waterbody / flowline
+// flood_risk = hydro-adjacency proxy (lower = safer)
+// ─────────────────────────────────────────────────────────────────────────────
+const SITES = [
+  {id:804168,rank:1,  lat:30.345479,lon:-97.987155,acres:118.4,confidence:0.746,p_top20:0.993,water_dist:0.02,flow_dist:0.01,flood_risk:0.000,mc_mean:0.669,power_score:0.88},
+  {id:324445,rank:2,  lat:30.209457,lon:-97.930112,acres:83.5, confidence:0.733,p_top20:0.963,water_dist:0.17,flow_dist:0.00,flood_risk:0.046,mc_mean:0.644,power_score:0.88},
+  {id:214268,rank:3,  lat:30.310361,lon:-97.525505,acres:75.2, confidence:0.715,p_top20:0.935,water_dist:0.04,flow_dist:0.05,flood_risk:0.028,mc_mean:0.649,power_score:0.88},
+  {id:190649,rank:4,  lat:30.242763,lon:-97.533531,acres:117.7,confidence:0.745,p_top20:0.972,water_dist:0.16,flow_dist:0.03,flood_risk:0.058,mc_mean:0.641,power_score:0.88},
+  {id:838573,rank:5,  lat:30.265175,lon:-97.559221,acres:66.0, confidence:0.710,p_top20:0.922,water_dist:0.17,flow_dist:0.01,flood_risk:0.053,mc_mean:0.639,power_score:0.88},
+  {id:522658,rank:6,  lat:30.376648,lon:-97.863202,acres:155.2,confidence:0.702,p_top20:0.886,water_dist:0.01,flow_dist:0.10,flood_risk:0.045,mc_mean:0.648,power_score:0.88},
+  {id:883689,rank:7,  lat:30.121840,lon:-97.704259,acres:55.2, confidence:0.697,p_top20:0.901,water_dist:0.19,flow_dist:0.00,flood_risk:0.055,mc_mean:0.637,power_score:0.88},
+  {id:513121,rank:8,  lat:30.172597,lon:-97.763665,acres:90.1, confidence:0.698,p_top20:0.888,water_dist:0.17,flow_dist:0.04,flood_risk:0.068,mc_mean:0.633,power_score:0.88},
+  {id:464416,rank:9,  lat:30.129136,lon:-97.588782,acres:72.9, confidence:0.671,p_top20:0.843,water_dist:0.22,flow_dist:0.02,flood_risk:0.072,mc_mean:0.630,power_score:0.88},
+  {id:201906,rank:10, lat:30.287659,lon:-97.485614,acres:67.1, confidence:0.656,p_top20:0.817,water_dist:0.15,flow_dist:0.05,flood_risk:0.064,mc_mean:0.632,power_score:0.88},
+  {id:855742,rank:11, lat:30.228441,lon:-97.661066,acres:56.6, confidence:0.636,p_top20:0.783,water_dist:0.18,flow_dist:0.04,flood_risk:0.068,mc_mean:0.629,power_score:0.88},
+  {id:820454,rank:12, lat:30.441766,lon:-97.735055,acres:91.6, confidence:0.540,p_top20:0.591,water_dist:0.23,flow_dist:0.06,flood_risk:0.095,mc_mean:0.620,power_score:0.88},
+  {id:857666,rank:13, lat:30.210422,lon:-97.922397,acres:71.4, confidence:0.547,p_top20:0.612,water_dist:0.29,flow_dist:0.01,flood_risk:0.094,mc_mean:0.621,power_score:0.88},
+  {id:548458,rank:14, lat:30.400974,lon:-97.558197,acres:128.0,confidence:0.548,p_top20:0.598,water_dist:0.35,flow_dist:0.01,flood_risk:0.111,mc_mean:0.620,power_score:0.88},
+  {id:868345,rank:15, lat:30.417138,lon:-97.550833,acres:53.9, confidence:0.510,p_top20:0.550,water_dist:0.29,flow_dist:0.01,flood_risk:0.092,mc_mean:0.620,power_score:0.88},
+  {id:301097,rank:16, lat:30.092861,lon:-97.716322,acres:63.0, confidence:0.473,p_top20:0.476,water_dist:0.24,flow_dist:0.05,flood_risk:0.096,mc_mean:0.617,power_score:0.88},
+  {id:300913,rank:17, lat:30.094407,lon:-97.644902,acres:50.0, confidence:0.424,p_top20:0.392,water_dist:0.30,flow_dist:0.02,flood_risk:0.099,mc_mean:0.615,power_score:0.88},
+  {id:783861,rank:18, lat:30.183063,lon:-97.626424,acres:81.8, confidence:0.221,p_top20:0.009,water_dist:0.30,flow_dist:0.04,flood_risk:0.113,mc_mean:0.612,power_score:0.88},
+  {id:873219,rank:19, lat:30.356168,lon:-98.008986,acres:56.1, confidence:0.344,p_top20:0.239,water_dist:0.23,flow_dist:0.07,flood_risk:0.104,mc_mean:0.611,power_score:0.88},
+  {id:721564,rank:20, lat:30.312728,lon:-97.951279,acres:50.4, confidence:0.349,p_top20:0.252,water_dist:0.29,flow_dist:0.04,flood_risk:0.105,mc_mean:0.611,power_score:0.88}
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SUB-C DATA
+// BTM spread = ERCOT HB_SOUTH LMP − (Henry Hub gas × 7.0 heat rate)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// [month, mean_btm_spread $/MWh, monthly_peak $/MWh] — 2021–2024
+// Feb 2021 spike (index 1) is Winter Storm Uri; capped at 200 in chart render
+const MONTHLY=[["2021-01",45.1,130.5],["2021-02",1381.9,500],["2021-03",36.6,167.2],["2021-04",34.5,118.6],["2021-05",33.7,138.5],["2021-06",34.6,133.8],["2021-07",35.8,153.4],["2021-08",40.6,135.8],["2021-09",37.3,102.1],["2021-10",36.3,120.4],["2021-11",38.0,112.2],["2021-12",44.1,167.8],["2022-01",33.4,100.3],["2022-02",26.5,100.5],["2022-03",20.3,97.0],["2022-04",7.8,135.4],["2022-05",-1.9,95.6],["2022-06",2.9,105.2],["2022-07",14.6,110.6],["2022-08",7.5,97.9],["2022-09",18.0,125.8],["2022-10",35.0,105.4],["2022-11",35.0,116.6],["2022-12",30.5,132.6],["2023-01",41.1,135.4],["2023-02",41.7,127.9],["2023-03",38.3,156.9],["2023-04",37.7,151.8],["2023-05",40.2,125.5],["2023-06",44.2,178.8],["2023-07",45.8,150.2],["2023-08",50.5,140.8],["2023-09",54.7,186.7],["2023-10",53.9,155.1],["2023-11",54.6,130.0],["2023-12",51.7,127.0],["2024-01",36.7,173.3],["2024-02",46.3,160.9],["2024-03",44.6,136.8],["2024-04",42.7,136.3],["2024-05",39.8,118.1],["2024-06",41.0,124.7],["2024-07",48.9,143.4],["2024-08",56.3,159.3],["2024-09",57.0,126.7],["2024-10",59.3,142.8],["2024-11",59.6,136.9],["2024-12",48.7,131.8]];
+
+// [date, forecast_mean, ci_low_80pct, ci_high_80pct] — SARIMA(1,1,1)(1,1,1,7), MAPE 16.3%
+const SARIMA=[["2025-01-01",45.7,14.7,76.7],["2025-01-02",45.6,14.5,76.7],["2025-01-03",45.8,14.6,76.9],["2025-01-04",45.5,14.2,76.7],["2025-01-05",45.9,14.6,77.2],["2025-01-06",45.5,14.1,77.0],["2025-01-07",46.2,14.7,77.7],["2025-01-08",45.7,14.1,77.3],["2025-01-09",45.6,13.9,77.3],["2025-01-10",45.8,14.0,77.6],["2025-01-11",45.5,13.6,77.4],["2025-01-12",45.9,13.9,77.9],["2025-01-13",45.5,13.5,77.6],["2025-01-14",46.2,14.0,78.3],["2025-01-15",45.7,13.5,77.9],["2025-01-16",45.6,13.3,77.9],["2025-01-17",45.8,13.4,78.2],["2025-01-18",45.5,13.0,78.0],["2025-01-19",45.9,13.3,78.5],["2025-01-20",45.5,12.8,78.2],["2025-01-21",46.2,13.4,78.9],["2025-01-22",45.7,12.8,78.5],["2025-01-23",45.6,12.7,78.5],["2025-01-24",45.8,12.7,78.8]];
+
+// p50 spread by season and peak/off-peak window (from outputs/spread_seasonal_table.csv)
+const SEASONAL={"Fall":{"Off-Peak":37.86,"Peak":48.29},"Spring":{"Off-Peak":23.92,"Peak":34.74},"Summer":{"Off-Peak":29.57,"Peak":40.09},"Winter":{"Off-Peak":31.26,"Peak":42.27}};
+
+// Daily ERCOT LMP vs gas cost during Winter Storm Uri (Feb 8–18, 2021)
+const URI_DAILY=[{day:"Feb 8",lmp:48,gas:7},{day:"Feb 9",lmp:95,gas:8},{day:"Feb 10",lmp:380,gas:9},{day:"Feb 11",lmp:1800,gas:10},{day:"Feb 12",lmp:9000,gas:12},{day:"Feb 13",lmp:9000,gas:15},{day:"Feb 14",lmp:4200,gas:13},{day:"Feb 15",lmp:1800,gas:11},{day:"Feb 16",lmp:600,gas:10},{day:"Feb 17",lmp:180,gas:8},{day:"Feb 18",lmp:65,gas:7}];
+
+// Reverse-geocode fallback: neighborhood names for each parcel centroid
+const CITY_APPROX={804168:"West Austin / Bee Cave, TX",324445:"Oak Hill, Austin TX",214268:"Manor, TX",190649:"Del Valle, Austin TX",838573:"SE Austin, TX",522658:"West Austin, TX",883689:"Buda, TX",513121:"South Austin, TX",464416:"SE Austin, TX",201906:"Manor, TX",855742:"South Austin, TX",820454:"N Austin / Round Rock, TX",857666:"Oak Hill, Austin TX",548458:"Pflugerville, TX",868345:"Pflugerville, TX",301097:"Buda, TX",300913:"Buda, TX",783861:"SE Austin, TX",873219:"Bee Cave / Lakeway, TX",721564:"Oak Hill, Austin TX"};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// Confidence thresholds match the pipeline: ≥0.73 = high, ≥0.70 = medium
+// ─────────────────────────────────────────────────────────────────────────────
+function confColor(c) { return c >= 0.73 ? 'green' : c >= 0.70 ? 'yellow' : 'red'; }
+function confHex(c)   { return c >= 0.73 ? '#3fb950' : c >= 0.70 ? '#e3b341' : '#f85149'; }
+function mcBarColor(p){ return p >= 0.93 ? '#3fb950' : p >= 0.70 ? '#e3b341' : '#f85149'; }
+
+function floodLabel(f) {
+  if (f < 0.04) return { label: 'Low',    color: '#3fb950' };
+  if (f < 0.08) return { label: 'Medium', color: '#e3b341' };
+  return               { label: 'High',   color: '#f85149' };
+}
+
+// 1 football field ≈ 1.32 acres
+function footballFields(a) { return Math.round(a / 1.32); }
+
+function showToast(msg, ms = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), ms);
+}
+
+function setLoading(on, label = 'Loading…') {
+  document.getElementById('loading-label').textContent = label;
+  document.getElementById('loading-overlay').classList.toggle('active', on);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PARCEL BOUNDING BOX
+// Estimates a square footprint from acreage and draws it as a dashed border.
+// 1 acre = 0.004047 km²; side = sqrt(area). Converts km to lat/lng degrees.
+// ─────────────────────────────────────────────────────────────────────────────
+function parcelBBoxCoords(site) {
+  const km   = Math.sqrt(site.acres * 0.004047);
+  const latH = (km / 2) / 111;
+  const lngH = (km / 2) / (111 * Math.cos(site.lat * Math.PI / 180));
+  return [
+    [site.lon - lngH, site.lat - latH],
+    [site.lon + lngH, site.lat - latH],
+    [site.lon + lngH, site.lat + latH],
+    [site.lon - lngH, site.lat + latH],
+    [site.lon - lngH, site.lat - latH],  // close the ring
+  ];
+}
+
+function drawParcelBBox(site) {
+  const geojson = {
+    type: 'Feature',
+    geometry: { type: 'Polygon', properties: {}, coordinates: [parcelBBoxCoords(site)] }
+  };
+  // Remove stale layer/source before re-adding (only one bbox shown at a time)
+  if (map.getLayer('parcel-bbox-line')) map.removeLayer('parcel-bbox-line');
+  if (map.getSource('parcel-bbox'))    map.removeSource('parcel-bbox');
+  map.addSource('parcel-bbox', { type: 'geojson', data: geojson });
+  map.addLayer({
+    id: 'parcel-bbox-line', type: 'line', source: 'parcel-bbox',
+    paint: { 'line-color': '#3fb950', 'line-width': 2.5, 'line-dasharray': [5, 3] }
+  });
+}
+
+function clearParcelBBox() {
+  if (map.getLayer('parcel-bbox-line')) map.removeLayer('parcel-bbox-line');
+  if (map.getSource('parcel-bbox'))    map.removeSource('parcel-bbox');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REVERSE GEOCODING
+// Calls Mapbox Places API to get a human-readable location name.
+// Falls back to the hardcoded CITY_APPROX dict if the API fails or TOKEN missing.
+// Results are cached so each parcel is only looked up once per session.
+// ─────────────────────────────────────────────────────────────────────────────
+const geocodeCache = {};
+
+async function geocode(site) {
+  if (geocodeCache[site.id]) return geocodeCache[site.id];
+  if (!TOKEN) {
+    return (geocodeCache[site.id] = CITY_APPROX[site.id] || 'Travis County, TX');
+  }
+  try {
+    const r = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${site.lon},${site.lat}.json` +
+      `?access_token=${TOKEN}&types=place,locality,neighborhood&limit=1`
+    );
+    const j = await r.json();
+    return (geocodeCache[site.id] =
+      j.features?.[0]?.place_name?.split(',').slice(0, 2).join(',').trim()
+      || CITY_APPROX[site.id]);
+  } catch {
+    return (geocodeCache[site.id] = CITY_APPROX[site.id]);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB SWITCHER
+// Charts are rendered lazily on first activation — Chart.js draws 0×0 into
+// canvases that are hidden via display:none, so we defer until the tab is visible.
+// ─────────────────────────────────────────────────────────────────────────────
+const chartsInit = {};
+
+function showTab(tab) {
+  ['sites', 'detail', 'suba', 'subc'].forEach(t => {
+    const view   = document.getElementById(t + '-view');
+    const button = document.getElementById('tab-' + t);
+    if (view)   view.classList.toggle('active', t === tab);
+    if (button) button.classList.toggle('active', t === tab);
+  });
+
+  // Re-trigger slide-in animation on detail tab
+  if (tab === 'detail') {
+    const dv = document.getElementById('detail-view');
+    dv.style.animation = 'none';
+    dv.offsetHeight;                              // force reflow
+    dv.style.animation = 'slideIn .3s ease both';
+  }
+
+  // Sub-A: filtering funnel + radar chart (first open only)
+  if (tab === 'suba' && !chartsInit.suba) {
+    chartsInit.suba = true;
+    setTimeout(() => { renderFunnel(); renderRadarChart(); }, 60);
+  }
+
+  // Sub-C: Uri spike + SARIMA spread + seasonal table (first open only)
+  if (tab === 'subc' && !chartsInit.subc) {
+    chartsInit.subc = true;
+    setTimeout(() => { renderUriChart(); renderSpreadChart(); renderSeasonalTable(); }, 60);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAP — globe intro → satellite streets → dark mercator on launch
+// ─────────────────────────────────────────────────────────────────────────────
+let map, markers = [], selectedSite = null, spinId = null;
+
+function applyGlobeStyle() {
+  map.setFog({
+    color: 'rgb(20,20,30)', 'high-color': 'rgb(36,92,223)',
+    'horizon-blend': 0.02, 'space-color': 'rgb(11,11,25)', 'star-intensity': 0.6
+  });
+  if (!map.getSource('mapbox-dem')) {
+    map.addSource('mapbox-dem', {
+      type: 'raster-dem', url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+      tileSize: 512, maxzoom: 14
+    });
+    map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+  }
+}
+
+function startSpin() {
+  stopSpin();
+  spinId = setInterval(() => {
+    const c = map.getCenter();
+    map.setCenter([c.lng + 0.28, c.lat]);
+  }, 50);
+}
+
+function stopSpin() {
+  if (spinId) { clearInterval(spinId); spinId = null; }
+}
+
+function initMap() {
+  if (!TOKEN) {
+    document.getElementById('intro-screen').innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;' +
+      'font-family:\'Space Mono\',monospace;color:#f85149;text-align:center;padding:40px">' +
+      '<div style="font-size:2rem;font-family:\'Bebas Neue\',sans-serif;letter-spacing:.1em">CONFIG MISSING</div>' +
+      '<div style="font-size:.7rem;letter-spacing:.2em;color:#6e7681">Add your Mapbox token to config.js then refresh.</div></div>';
+    return;
+  }
+  mapboxgl.accessToken = TOKEN;
+  map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/satellite-streets-v12',
+    projection: 'globe',
+    zoom: 1.5, center: [0, 20], antialias: true
+  });
+  map.once('style.load', () => { applyGlobeStyle(); startSpin(); });
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+  map.addControl(new mapboxgl.ScaleControl({ maxWidth: 120 }), 'bottom-left');
+}
+
+// Reset to spinning globe and hide all panels
+function goHome() {
+  stopSpin();
+  selectedSite = null;
+  if (map) clearParcelBBox();
+  markers.forEach(m => m._el.classList.remove('selected'));
+  document.querySelectorAll('.site-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById('tab-detail').style.display = 'none';
+  showTab('sites');
+  document.getElementById('topbar').classList.remove('visible');
+  document.getElementById('right-panel').classList.remove('visible');
+  document.getElementById('map').classList.remove('split');
+  document.getElementById('intro-screen').classList.remove('exiting');
+  if (!map) return;
+  map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
+  map.once('style.load', () => {
+    map.setProjection('globe');
+    applyGlobeStyle();
+    map.flyTo({ center: [0, 20], zoom: 1.5, duration: 2200, essential: true });
+    map.once('moveend', startSpin);
+  });
+}
+
+// Transition from globe intro → dark mercator map with right panel
+function boot() {
+  if (!TOKEN || !map) return;
+  stopSpin();
+  setLoading(true, 'Loading parcels…');
+  map.setStyle('mapbox://styles/mapbox/dark-v11');
+  map.once('style.load', () => {
+    map.setProjection('mercator');
+    document.getElementById('right-panel').classList.add('visible');
+    document.getElementById('map').classList.add('split');
+    document.getElementById('topbar').classList.add('visible');
+    // Wait 540ms for the CSS split transition to finish before calling resize()
+    // so Mapbox recalculates its canvas at the new (58vw) width
+    setTimeout(() => {
+      map.resize();
+      map.fitBounds(TRAVIS_BBOX, { padding: 60, duration: 1800 });
+      renderMarkers();
+      setLoading(false);
+      showToast('20 sites loaded');
+    }, 540);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MARKERS
+// Color-coded dots by confidence tier. Click → open detail; click same → zoom out.
+// ─────────────────────────────────────────────────────────────────────────────
+function renderMarkers() {
+  markers.forEach(m => m.remove());
+  markers = [];
+  SITES.forEach(site => {
+    const el = document.createElement('div');
+    el.className = `parcel-marker ${confColor(site.confidence)}`;
+    el.title = `Parcel ${site.id}`;
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([site.lon, site.lat])
+      .addTo(map);
+    el.addEventListener('click', () => {
+      if (selectedSite && selectedSite.id === site.id) {
+        // Second click on same parcel — zoom back out to county view
+        selectedSite = null;
+        el.classList.remove('selected');
+        clearParcelBBox();
+        document.getElementById('tab-detail').style.display = 'none';
+        showTab('sites');
+        map.fitBounds(TRAVIS_BBOX, { padding: 60, duration: 1200 });
+      } else {
+        openDetail(site, el);
+      }
+    });
+    markers.push(marker);
+    marker._el     = el;
+    marker._siteId = site.id;
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DETAIL PANEL
+// Opens when a marker or site-list row is clicked. Draws the bbox, flies the
+// camera in, renders the scorecard HTML, then fires a geocode request async
+// so the place name appears without blocking the rest of the UI.
+// ─────────────────────────────────────────────────────────────────────────────
+async function openDetail(site, el) {
+  selectedSite = site;
+
+  // Clear previous selection state on both markers and list rows
+  markers.forEach(m => m._el.classList.remove('selected'));
+  document.querySelectorAll('.site-row').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  const sr = document.querySelector(`.site-row[data-id="${site.id}"]`);
+  if (sr) { sr.classList.add('selected'); sr.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+  drawParcelBBox(site);
+  map.flyTo({ center: [site.lon, site.lat], zoom: 14, duration: 1000, essential: true });
+
+  const flood  = floodLabel(site.flood_risk);
+  const stable = Math.round(site.p_top20 * 1000);
+  document.getElementById('detail-content').innerHTML=`
+    <div style="padding:6px 0 4px">
+      <div class="dl">Selected Site</div>
+      <div class="dc sel">
+        <div style="display:flex;align-items:center;margin-bottom:6px">
+          <span style="font-size:13px;font-weight:700;color:var(--accent)">Parcel ${site.id}</span>
+          <span class="sel-badge">SELECTED</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--muted)">Rank #${site.rank}</span>
+        </div>
+        <div class="geo-name" id="geo-place">Locating…</div>
+        <div class="geo-sub">County: Travis County, TX</div>
+        <div class="coords">Lat ${site.lat.toFixed(4)}  Lon ${site.lon.toFixed(4)}</div>
+      </div>
+    </div>
+    <div>
+      <div class="dl">Land Details</div>
+      <div class="dc">
+        <div class="dr"><span class="drl">Acreage</span><span class="drv">${site.acres} ac ≈ ${footballFields(site.acres)} football fields</span></div>
+        <div class="dr"><span class="drl">Rank</span><span class="drv">#${site.rank} of 630 qualified parcels</span></div>
+        <div class="dr"><span class="drl">Zoning</span><span class="drv" style="font-size:9px;color:var(--muted)">Verify with Travis County GIS</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="dl">Infrastructure Proximity</div>
+      <div class="dc">
+        <div class="dr"><span class="drl">Water body</span><span class="drv" style="color:${site.water_dist<0.1?'#3fb950':site.water_dist<0.3?'#e3b341':'var(--text)'}">${(site.water_dist*1000).toFixed(0)} m</span></div>
+        <div class="dr"><span class="drl">Flowline</span><span class="drv" style="color:${site.flow_dist<0.05?'#3fb950':site.flow_dist<0.15?'#e3b341':'var(--text)'}">${(site.flow_dist*1000).toFixed(0)} m</span></div>
+        <div class="dr"><span class="drl">Flood risk</span><span class="drv" style="color:${flood.color}">${flood.label} (${site.flood_risk.toFixed(4)})</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="dl">Monte Carlo Confidence</div>
+      <div class="dc">
+        <div class="dr"><span class="drl">Confidence score</span><span class="drv" style="color:${confHex(site.confidence)}">${site.confidence.toFixed(3)}</span></div>
+        <div class="dr"><span class="drl">p_top20</span><span class="drv" style="color:var(--accent)">${(site.p_top20*100).toFixed(1)}%</span></div>
+        <div style="margin-top:8px">
+          <div class="mc-bar-label">Stable in ${stable.toLocaleString()} / 1,000 simulations</div>
+          <div class="mc-bar-track" style="height:5px;margin-top:3px"><div class="mc-bar-fill" style="width:${site.p_top20*100}%;background:${mcBarColor(site.p_top20)}"></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="dl">Composite Scorecard</div>
+      <div class="scorecard">
+        <div class="sc-col land">
+          <div class="sc-title">🗺 Land</div>
+          <div class="sc-r"><span class="sc-l">Confidence</span><span class="sc-v" style="color:${confHex(site.confidence)}">${site.confidence.toFixed(3)}</span></div>
+          <div class="sc-r"><span class="sc-l">Acres</span><span class="sc-v">${site.acres}</span></div>
+          <div class="sc-r"><span class="sc-l">Water</span><span class="sc-v">${(site.water_dist*1000).toFixed(0)}m</span></div>
+          <div class="sc-r"><span class="sc-l">Flood</span><span class="sc-v" style="color:${flood.color}">${flood.label}</span></div>
+          <div class="sc-r"><span class="sc-l">p_top20</span><span class="sc-v">${(site.p_top20*100).toFixed(1)}%</span></div>
+        </div>
+        <div class="sc-col power">
+          <div class="sc-title">⚡ Power</div>
+          <div class="sc-r"><span class="sc-l">Spread</span><span class="sc-v" style="color:#56d364">$37.85/MWh</span></div>
+          <div class="sc-r"><span class="sc-l">Viable</span><span class="sc-v">94.9%</span></div>
+          <div class="sc-r"><span class="sc-l">Uri val</span><span class="sc-v" style="color:#e3b341">$9.1M</span></div>
+          <div class="sc-r"><span class="sc-l">SARIMA</span><span class="sc-v">$45.7/MWh</span></div>
+          <div class="sc-r"><span class="sc-l">MAPE</span><span class="sc-v">16.3%</span></div>
+        </div>
+        <div class="sc-col gas">
+          <div class="sc-title" style="color:var(--muted)">🔒 Gas</div>
+          <div class="sc-note">Sub-B — not scored<br><br>Roadmap: PHMSA pipeline analysis · Atmos Mid-Tex Division · curtailment risk index</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('tab-detail').style.display = 'block';
+  showTab('detail');
+
+  // Geocode asynchronously so the panel opens immediately; name fills in after
+  const place = await geocode(site);
+  const gp = document.getElementById('geo-place');
+  if (gp) gp.textContent = place;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SITE LIST (Sites tab)
+// Builds ranked rows from SITES array. Gold/silver/bronze medals for top 3.
+// Clicking a row triggers the same openDetail flow as clicking the map marker.
+// ─────────────────────────────────────────────────────────────────────────────
+function renderSiteList() {
+  const container = document.getElementById('site-list');
+  const medals = ['#ffd700', '#c0c0c0', '#cd7f32'];
+
+  SITES.forEach(site => {
+    const rc    = site.rank <= 3  ? medals[site.rank - 1]
+                : site.rank <= 8  ? '#3fb950'
+                : site.rank <= 14 ? '#2ea043'
+                : '#6e7681';
+    const flood  = floodLabel(site.flood_risk);
+    const stable = Math.round(site.p_top20 * 1000);
+
+    const row = document.createElement('div');
+    row.className  = 'site-row';
+    row.dataset.id = site.id;
+    row.innerHTML = `
+      <div class="site-rank" style="background:${rc}22;color:${rc};border:1px solid ${rc}55">${site.rank}</div>
+      <div class="site-info">
+        <div class="site-id">Parcel ${site.id}</div>
+        <div class="site-sub">${site.acres} ac · ${(site.water_dist * 1000).toFixed(0)}m water · Flood: <span style="color:${flood.color}">${flood.label}</span></div>
+        <div class="mc-bar-wrap">
+          <div class="mc-bar-label">Stable in ${stable.toLocaleString()} / 1,000 simulations</div>
+          <div class="mc-bar-track"><div class="mc-bar-fill" style="width:${site.p_top20 * 100}%;background:${mcBarColor(site.p_top20)}"></div></div>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="conf-badge" style="color:${confHex(site.confidence)}">${site.confidence.toFixed(3)}</div>
+        <div style="font-size:8px;color:var(--muted)">p=${site.p_top20}</div>
+      </div>`;
+
+    row.addEventListener('click', () => {
+      const m = markers.find(m => m._siteId === site.id);
+      if (m) openDetail(site, m._el);
+    });
+    container.appendChild(row);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHARTS — Sub-A
+// ─────────────────────────────────────────────────────────────────────────────
+
+// HTML funnel showing each hard-filter step of the Sub-A pipeline
+function renderFunnel() {
+  const steps = [
+    { count: '186,000', label: 'All Travis County parcels',            pct: 100,  color: 'rgba(63,185,80,.70)', filter: null },
+    { count: '~12,400', label: 'Pass acreage filter (≥ 50 acres)',     pct: 6.7,  color: 'rgba(63,185,80,.62)', filter: 'parcel_area_acres ≥ 50' },
+    { count: '~8,200',  label: 'Pass water body overlap filter',       pct: 4.4,  color: 'rgba(63,185,80,.60)', filter: 'intersects_waterbody = 0' },
+    { count: '~1,800',  label: 'Pass water proximity (< 5 km)',        pct: 1.0,  color: 'rgba(63,185,80,.65)', filter: 'dist_to_waterbody_km < 5' },
+    { count: '630',     label: 'Pass flowline proximity (< 2 km)',     pct: 0.34, color: 'rgba(86,211,100,.70)', filter: 'dist_to_flowline_km < 2' },
+    { count: 'Top 20',  label: 'Monte Carlo 1,000 sims → Final shortlist', pct: 0.01, color: 'rgba(86,211,100,.90)', filter: 'Dirichlet weight sampling → p_top20 ranking' },
+  ];
+  const wrap = document.getElementById('funnel-wrap');
+  let html = '';
+  steps.forEach((s, i) => {
+    const w = Math.max(s.pct / 100 * 100, 4);  // min 4% width so bars are visible
+    html += `<div class="funnel-step">
+      ${i > 0 && s.filter ? `<div class="funnel-filter">▸ ${s.filter}</div>` : ''}
+      <div class="funnel-bar-row">
+        <div class="funnel-bar" style="width:${w}%;background:${s.color}"><span class="funnel-count">${s.count}</span></div>
+        <span class="funnel-label">${s.label}</span>
+      </div>
+      ${i < steps.length - 1 ? '<div class="funnel-arrow">▼</div>' : ''}
+    </div>`;
+  });
+  wrap.innerHTML = html;
+}
+
+// Radar chart: top 5 sites across 5 normalised dimensions
+function renderRadarChart() {
+  const top5   = SITES.filter(s => s.rank <= 5);
+  const labels = ['Acreage', 'Water\nAccess', 'Low Flood\nRisk', 'Monte Carlo\nScore', 'BTM\nViability'];
+  const datasets = top5.map((site, i) => {
+    const hue = [120, 100, 80, 140, 160][i];
+    return {
+      label: `#${site.rank} (${site.id})`,
+      // Normalise each dimension to [0, 1] for radar display
+      data: [
+        site.acres / 160,                          // acreage (160 ac = max in set)
+        1 - Math.min(site.water_dist / 2, 1),      // closer water = higher score
+        1 - site.flood_risk,                       // lower flood proxy = safer
+        site.mc_mean,                              // mean Monte Carlo score
+        site.power_score                           // BTM viability (constant; Sub-C)
+      ],
+      borderColor:      `hsl(${hue},70%,55%)`,
+      backgroundColor:  `hsla(${hue},70%,55%,.06)`,
+      pointBackgroundColor: `hsl(${hue},70%,55%)`,
+      borderWidth: 1.5, pointRadius: 3
+    };
+  });
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend:  { position: 'right', labels: { color: '#6e7681', font: { size: 9 }, boxWidth: 10, padding: 5 } },
+        tooltip: { backgroundColor: 'rgba(13,17,23,.96)', borderColor: '#3fb950', borderWidth: 1 }
+      },
+      scales: { r: {
+        min: 0, max: 1,
+        ticks: { display: false },
+        grid:        { color: 'rgba(255,255,255,.05)' },
+        angleLines:  { color: 'rgba(255,255,255,.05)' },
+        pointLabels: { color: '#6e7681', font: { size: 9 } }
+      }}
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHARTS — Sub-C
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Line chart of ERCOT LMP vs gas cost during Winter Storm Uri
+function renderUriChart() {
+  const ctx = document.getElementById('uriChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: URI_DAILY.map(d => d.day),
+      datasets: [
+        {
+          label: 'ERCOT LMP ($/MWh)',
+          data: URI_DAILY.map(d => Math.min(d.lmp, 9500)),  // cap at 9500 for y-axis legibility
+          borderColor: '#f85149', backgroundColor: 'rgba(248,81,73,.07)',
+          fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2
+        },
+        {
+          label: 'Gas Cost ($/MWh)',
+          data: URI_DAILY.map(d => d.gas),
+          borderColor: '#e3b341', fill: false, tension: 0.2,
+          pointRadius: 2, borderWidth: 1.5, borderDash: [4, 3]
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend:  { labels: { color: '#6e7681', font: { size: 9 }, boxWidth: 10, padding: 8 } },
+        tooltip: { backgroundColor: 'rgba(13,17,23,.96)', borderColor: '#e3b341', borderWidth: 1,
+          callbacks: { label: c => ` ${c.dataset.label}: $${c.raw.toLocaleString()}/MWh` } }
+      },
+      scales: {
+        x: { ticks: { color: '#6e7681', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.02)' } },
+        y: { ticks: { color: '#6e7681', font: { size: 9 }, callback: v => `$${v.toLocaleString()}` }, grid: { color: 'rgba(255,255,255,.02)' } }
+      }
+    }
+  });
+}
+
+// Combined chart: 48 months of historical spread + 24-day SARIMA forecast with 80% CI band
+function renderSpreadChart() {
+  const labels  = MONTHLY.map(d => d[0]);
+  const means   = MONTHLY.map(d => Math.min(d[1], 200));   // clip Uri spike for scale
+  const peaks   = MONTHLY.map(d => d[2]);
+  const fcLabels = SARIMA.map(d => d[0]);
+  const fcMeans  = SARIMA.map(d => d[1]);
+  const fcLo     = SARIMA.map(d => d[2]);
+  const fcHi     = SARIMA.map(d => d[3]);
+  const allLabels = [...labels, ...fcLabels];
+  // Pad historical arrays with null for forecast range (and vice versa) so
+  // Chart.js keeps them on the same x-axis without connecting across the gap
+  const pad  = new Array(labels.length).fill(null);
+  const padF = new Array(fcLabels.length).fill(null);
+
+  const ctx = document.getElementById('spreadChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: [
+        { label: 'Mean Spread',     data: [...means,   ...padF], borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,.07)', fill: true,  tension: 0.3, pointRadius: 1.5, borderWidth: 1.5 },
+        { label: 'Monthly Peak',    data: [...peaks,   ...padF], borderColor: 'rgba(248,81,73,.45)', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 1, borderDash: [3, 3] },
+        // CI band: 'FC CI High' drawn first, 'FC CI Low' fills back to it using fill:'-1'
+        { label: 'FC CI High',      data: [...pad, ...fcHi],  borderColor: 'transparent', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 0 },
+        { label: 'FC CI Low',       data: [...pad, ...fcLo],  borderColor: 'transparent', backgroundColor: 'rgba(86,211,100,.12)', fill: '-1', tension: 0.3, pointRadius: 0, borderWidth: 0 },
+        { label: 'SARIMA Forecast', data: [...pad, ...fcMeans], borderColor: '#56d364', fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(13,17,23,.96)', borderColor: '#3fb950', borderWidth: 1,
+          filter: i => !['FC CI High', 'FC CI Low'].includes(i.dataset.label) && i.raw !== null,
+          callbacks: {
+            label: c => {
+              if (c.raw === null) return null;
+              if (c.dataset.label === 'SARIMA Forecast') return ` Forecast: $${c.raw}/MWh`;
+              if (c.dataset.label === 'Mean Spread') {
+                const orig = MONTHLY[c.dataIndex];
+                if (orig && orig[1] > 200) return ` Spread: $${orig[1].toFixed(0)}/MWh (Uri spike)`;
+                return ` Mean Spread: $${c.raw}/MWh`;
+              }
+              return null;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#6e7681', font: { size: 9 }, maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,.02)' } },
+        y: {
+          ticks: { color: '#6e7681', font: { size: 9 }, callback: v => `$${v}` },
+          grid:  { color: 'rgba(255,255,255,.02)' },
+          title: { display: true, text: '$/MWh (clipped $200)', color: '#6e7681', font: { size: 8 } }
+        }
+      }
+    }
+  });
+}
+
+// Seasonal spread table — rendered as an HTML table, not a Chart.js canvas
+function renderSeasonalTable() {
+  const c = document.getElementById('season-table');
+  let html=`<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr>
+    <th style="text-align:left;color:var(--muted);padding:3px 6px">Season</th>
+    <th style="color:var(--muted);padding:3px 8px;text-align:right">Peak</th>
+    <th style="color:var(--muted);padding:3px 8px;text-align:right">Off-Peak</th>
+    <th style="color:var(--muted);padding:3px 8px;text-align:right">Premium</th>
+  </tr></thead><tbody>`;
+  ['Summer', 'Fall', 'Winter', 'Spring'].forEach(s => {
+    const peak = SEASONAL[s].Peak;
+    const off  = SEASONAL[s]['Off-Peak'];
+    const col  = peak > 45 ? '#3fb950' : peak > 35 ? '#56d364' : '#e3b341';
+    html += `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:4px 6px;font-weight:600">${s}</td>
+      <td style="padding:4px 8px;text-align:right;color:${col};font-weight:700">$${peak}</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--muted)">$${off}</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--yellow)">+$${(peak - off).toFixed(2)}</td>
+    </tr>`;
+  });
+  html += `
+    <tr style="border-top:1px solid rgba(227,179,65,.3)">
+      <td style="padding:4px 6px;background:var(--yellow-dim)"><span style="color:var(--yellow);font-weight:700">⚡ Uri</span> <span style="font-size:8px;color:var(--muted)">Feb 2021 · 8-day freeze</span></td>
+      <td style="padding:4px 8px;text-align:right;color:var(--yellow);font-weight:800;font-size:12px;background:var(--yellow-dim)">$9,000</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--red);font-size:8px;background:var(--yellow-dim)">extreme event</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--red);font-weight:700;background:var(--yellow-dim)">$9.1M/10MW</td>
+    </tr>
+    <tr style="border-top:1px solid var(--border)">
+      <td style="padding:4px 6px;color:var(--muted)">Annual Mean</td>
+      <td colspan="2" style="padding:4px 8px;text-align:center;color:var(--accent);font-weight:700">$37.85 / MWh</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--muted);font-size:8px">94.9% viable</td>
+    </tr>
+    <tr><td colspan="4" style="padding:5px 6px;font-size:8px;color:var(--muted);font-style:italic">Extreme event — a single 8-day freeze delivered more revenue than months of baseline spread.</td></tr>`;
+  c.innerHTML = html + '</tbody></table>';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+if (TOKEN) initMap();       // start globe; shows CONFIG MISSING screen if no token
+renderSiteList();           // populate Sites tab immediately (no map dependency)
+
+document.getElementById('launch-btn').addEventListener('click', () => {
+  document.getElementById('intro-screen').classList.add('exiting');
+  boot();   // fade out intro → switch to dark mercator map + right panel
+});
+
+document.getElementById('home-btn').addEventListener('click', goHome);
+
+// Keep map canvas correctly sized if the browser window resizes
+window.addEventListener('resize', () => { if (map) map.resize(); });
+</script>
+</body>
+</html>

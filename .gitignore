@@ -15,6 +15,9 @@ data/processed/features_filtered_v3.parquet
 # The filtered/final results (robustness_v2.csv, robustness_v3.csv, top20_*.csv) are kept
 outputs/robustness.csv
 
+# Frontend config — contains Mapbox token, never commit
+frontend/config.js
+
 # Python
 __pycache__/
 *.py[cod]

@@ -109,10 +109,20 @@ cp frontend/config.example.js frontend/config.js
 
 ### Open
 
+**Option A — direct file (simplest, no server needed):**
+
 ```bash
 start frontend/index.html   # Windows
 open frontend/index.html    # macOS
 ```
+
+**Option B — local server (recommended if direct file doesn't load tiles):**
+
+```bash
+python -m http.server 8000 --directory frontend
+```
+
+Then open → **http://localhost:8000**
 
 ---
 

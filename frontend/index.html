@@ -521,7 +521,7 @@ function startSpin() {
   stopSpin();
   spinId = setInterval(() => {
     const c = map.getCenter();
-    map.setCenter([c.lng + 0.28, c.lat]);
+    map.setCenter([c.lng - 0.28, c.lat]);
   }, 50);
 }
 
@@ -568,8 +568,13 @@ function goHome() {
   map.once('style.load', () => {
     map.setProjection('globe');
     applyGlobeStyle();
-    map.flyTo({ center: [0, 20], zoom: 1.5, duration: 2200, essential: true });
-    map.once('moveend', startSpin);
+    // Wait for the CSS split→full transition (500ms) before resizing,
+    // otherwise Mapbox still thinks the canvas is the narrow split width
+    setTimeout(() => {
+      map.resize();
+      map.flyTo({ center: [0, 20], zoom: 1.5, duration: 2200, essential: true });
+      map.once('moveend', startSpin);
+    }, 540);
   });
 }
 
